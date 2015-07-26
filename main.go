@@ -12,9 +12,19 @@ func main() {
   now := time.Now()
   hour := now.Hour()
   minute := now.Minute()
+  weekday := now.Weekday().String()
 
   doc, _ := goquery.NewDocument("http://www.keiseibus.co.jp/jikoku/bs_tt.php?key=04159_01a")
-  doc.Find("#tab-1 .standard2").Each(func(_ int, s *goquery.Selection) {
+  var selector string
+  if weekday ==  "Saturday" {
+    selector = "#tab-2 .standard2"
+  } else if weekday == "Sunday" {
+    selector = "#tab-3 .standard2"
+  } else {
+    selector = "#tab-1 .standard2"
+  }
+  //selector := "#tab-2 .standard2"
+  doc.Find(selector).Each(func(_ int, s *goquery.Selection) {
     s.Find("tbody tr").Each(func(_ int, s *goquery.Selection) {
         key, _ := strconv.Atoi(s.Find("th").Text())
         s.Find("td>span").Each(func(_ int, s *goquery.Selection) {
