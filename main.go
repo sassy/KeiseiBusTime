@@ -38,14 +38,32 @@ func main() {
       }
     }
   }
-  
+
   for _, v:= range result {
     if v < 10 {
       fmt.Println(fmt.Sprintf("%d:0%d ", hour, v))
     } else {
       fmt.Println(fmt.Sprintf("%d:%d ", hour, v))
     }
+  }
 
+  if hour != 23 && len(result) < 3 {
+    max := 3 - len(result)
+    arrivals = timetable[hour + 1]
+    result2 := make([]int, 0, max)
+    for _, v := range arrivals {
+      result2 = append(result2, v)
+      if len(result2) >= max {
+        break
+      }
+    }
+    for _, v:= range result2 {
+      if v < 10 {
+        fmt.Println(fmt.Sprintf("%d:0%d ", hour+1, v))
+      } else {
+        fmt.Println(fmt.Sprintf("%d:%d ", hour+1, v))
+      }
+    }
   }
 
 }
