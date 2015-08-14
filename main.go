@@ -9,13 +9,13 @@ import (
 	"time"
 )
 
-func departureTime(departure *string) (int, int) {
-	ret, _ := regexp.MatchString("^[0-9]{1,2}:[0-9]{1,2}$", *departure)
+func departureTime(departure string) (int, int) {
+	ret, _ := regexp.MatchString("^[0-9]{1,2}:[0-9]{1,2}$", departure)
 	var hour int
 	var minute int
 	if ret {
 		re := regexp.MustCompile("^([0-9]{1,2}):([0-9]{1,2})$")
-		bs := []byte(*departure)
+		bs := []byte(departure)
 		group := re.FindSubmatch(bs)
 		h, _ := strconv.Atoi(string(group[1]))
 		m, _ := strconv.Atoi(string(group[2]))
@@ -76,7 +76,8 @@ func printTimes(hour int, minuteses []int) {
 }
 
 func main() {
-	var departure = flag.String("t", "", "specify departure time.")
+	var departure string
+	flag.StringVar(&departure, "t", "", "specify departure time.")
 	flag.Parse()
 	hour, minute := departureTime(departure)
 	timetable := createTimetable(getSelector())
