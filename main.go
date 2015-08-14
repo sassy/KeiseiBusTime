@@ -5,13 +5,36 @@ import (
   "github.com/PuerkitoBio/goquery"
   "strconv"
   "time"
+  "flag"
+  "regexp"
 )
 
 func main() {
   var timetable = make([][]int, 24)
   now := time.Now()
-  hour := now.Hour()
-  minute := now.Minute()
+
+  var departure = flag.String("t", "", "specify departure time.")
+  flag.Parse()
+  ret, _ := regexp.MatchString("^[0-9]{1,2}:[0-9]{1,2}$", *departure)
+  var hour int
+  var minute int
+  if ret {
+      re := regexp.MustCompile("^([0-9]{1,2}):([0-9]{1,2})$")
+      bs := []byte(*departure)
+      group := re.FindSubmatch(bs)
+      h, _ := strconv.Atoi(string(group[1]))
+      m, _ := strconv.Atoi(string(group[2]))
+      if h >= 0 && h < 24 && m >= 0 && m < 60 {
+        hour = h
+        minute = m
+      } else {
+        hour = now.Minute()
+        minute = now.Minute()
+      }
+  } else {
+    hour = now.Hour()
+    minute = now.Minute()
+  }
   weekday := now.Weekday().String()
 
   doc, _ := goquery.NewDocument("http://www.keiseibus.co.jp/jikoku/bs_tt.php?key=04159_01a")
