@@ -24,7 +24,7 @@ func departureTime(departure string) (int, int) {
 			minute = m
 		} else {
 			now := time.Now()
-			hour = now.Minute()
+			hour = now.Hour()
 			minute = now.Minute()
 		}
 	} else {

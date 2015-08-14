@@ -17,6 +17,19 @@ func TestDepartureTime(t *testing.T) {
 	}
 }
 
+func TestDepartureTime2(t *testing.T) {
+	hour, minutes := departureTime("44:30")
+	now := time.Now()
+	expected_hour := now.Hour()
+	expected_minutes := now.Minute()
+	if hour != expected_hour {
+		t.Errorf("got %v\nwant %v", hour, expected_hour)
+	}
+	if minutes != expected_minutes {
+		t.Errorf("got %v\nwant %v", minutes, expected_minutes)
+	}
+}
+
 func TestGetSelector(t *testing.T) {
 	selector := getSelector()
 	if time.Now().Weekday().String() == "Saturday" {
