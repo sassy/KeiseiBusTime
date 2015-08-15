@@ -85,9 +85,13 @@ func printTimes(times []Time) {
 }
 
 func main() {
-	var departure string
-	var numOfResult int
+	var (
+		departure string
+		numOfResult int
+		isLast bool
+	)
 	flag.StringVar(&departure, "t", "", "specify departure time.")
+	flag.BoolVar(&isLast, "l", false, "bool flag")
 	flag.IntVar(&numOfResult, "n", DefaultNumOfResultToShow, "specify amount of result.")
 	flag.Parse()
 
@@ -98,6 +102,12 @@ func main() {
 
 	hour, minute := departureTime(departure)
 	timetable := createTimetable(getSelector())
+
+	if isLast {
+		result := []Time{timetable[len(timetable)-1]}
+		printTimes(result)
+		return
+	}
 
 	result := make([]Time, 0, numOfResult)
 	for _, v := range timetable {
