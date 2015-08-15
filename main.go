@@ -13,6 +13,10 @@ const (
 	DefaultNumOfResultToShow = 3
 )
 
+type Time struct {
+	hour, minute int
+}
+
 func departureTime(departure string) (int, int) {
 	ret, _ := regexp.MatchString("^[0-9]{1,2}:[0-9]{1,2}$", departure)
 	var hour int
@@ -50,8 +54,8 @@ func getSelector() string {
 	}
 }
 
-func createTimetable(selector string) [][]int {
-	var timetable = make([][]int, 24)
+func createTimetable(selector string) []Time {
+	var timetable = make([]Time, 0)
 	doc, _ := goquery.NewDocument("http://www.keiseibus.co.jp/jikoku/bs_tt.php?key=04159_01a")
 	doc.Find(selector).Each(func(_ int, s *goquery.Selection) {
 		s.Find("tbody tr").Each(func(_ int, s *goquery.Selection) {
@@ -61,7 +65,7 @@ func createTimetable(selector string) [][]int {
 				s.Find("br").Remove()
 				if s.Text() != "" {
 					value, _ := strconv.Atoi(s.Text())
-					timetable[key] = append(timetable[key], value)
+					timetable = append(timetable, Time{key, value})
 				}
 			})
 		})
@@ -69,12 +73,12 @@ func createTimetable(selector string) [][]int {
 	return timetable
 }
 
-func printTimes(hour int, minuteses []int) {
-	for _, v := range minuteses {
-		if v < 10 {
-			fmt.Println(fmt.Sprintf("%d:0%d ", hour, v))
+func printTimes(times []Time) {
+	for _, v := range times {
+		if v.minute < 10 {
+			fmt.Println(fmt.Sprintf("%d:0%d ", v.hour, v.minute))
 		} else {
-			fmt.Println(fmt.Sprintf("%d:%d ", hour, v))
+			fmt.Println(fmt.Sprintf("%d:%d ", v.hour, v.minute))
 		}
 	}
 }
@@ -87,28 +91,14 @@ func main() {
 	timetable := createTimetable(getSelector())
 	numOfResult := DefaultNumOfResultToShow
 
-	arrivals := timetable[hour]
-	result := make([]int, 0, numOfResult)
-	for _, v := range arrivals {
-		if v > minute {
+	result := make([]Time, 0, numOfResult)
+	for _, v := range timetable {
+		if v.minute > minute && v.hour >= hour {
 			result = append(result, v)
 			if len(result) >= numOfResult {
 				break
 			}
 		}
 	}
-	printTimes(hour, result)
-
-	if hour != 23 && len(result) < numOfResult {
-		max := numOfResult - len(result)
-		arrivals = timetable[hour+1]
-		result2 := make([]int, 0, max)
-		for _, v := range arrivals {
-			result2 = append(result2, v)
-			if len(result2) >= max {
-				break
-			}
-		}
-		printTimes(hour+1, result2)
-	}
+	printTimes(result)
 }
