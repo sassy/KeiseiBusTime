@@ -18,6 +18,14 @@ type Time struct {
 	hour, minute int
 }
 
+func (time *Time) toString() string {
+	if time.minute < 10 {
+		return fmt.Sprintf("%d:0%d ", time.hour, time.minute)
+	} else {
+		return fmt.Sprintf("%d:%d ", time.hour, time.minute)
+	}
+}
+
 func departureTime(departure string) (int, int) {
 	ret, _ := regexp.MatchString("^[0-9]{1,2}:[0-9]{1,2}$", departure)
 	var hour int
@@ -74,21 +82,17 @@ func createTimetable(selector string) []Time {
 	return timetable
 }
 
-func printTimes(times []Time) {
+func printTimes(times []string) {
 	for _, v := range times {
-		if v.minute < 10 {
-			fmt.Println(fmt.Sprintf("%d:0%d ", v.hour, v.minute))
-		} else {
-			fmt.Println(fmt.Sprintf("%d:%d ", v.hour, v.minute))
-		}
+		fmt.Println(v)
 	}
 }
 
 func main() {
 	var (
-		departure string
+		departure   string
 		numOfResult int
-		isLast bool
+		isLast      bool
 	)
 	flag.StringVar(&departure, "t", "", "specify departure time.")
 	flag.BoolVar(&isLast, "l", false, "show last bus of the day.")
@@ -104,15 +108,21 @@ func main() {
 	timetable := createTimetable(getSelector())
 
 	if isLast {
-		result := []Time{timetable[len(timetable)-1]}
+		result := []string{timetable[len(timetable)-1].toString()}
 		printTimes(result)
 		return
 	}
 
-	result := make([]Time, 0, numOfResult)
-	for _, v := range timetable {
+	result := make([]string, 0, numOfResult)
+	for i := 0; i < len(timetable); i++ {
+		v := timetable[i]
 		if v.minute > minute && v.hour >= hour {
-			result = append(result, v)
+			timeStr := v.toString()
+			if i < len(timetable)-1 && v == timetable[i+1] {
+				timeStr += "(2)"
+				i++
+			}
+			result = append(result, timeStr)
 			if len(result) >= numOfResult {
 				break
 			}
