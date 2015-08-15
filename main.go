@@ -85,11 +85,13 @@ func printTimes(times []Time) {
 
 func main() {
 	var departure string
+	var numOfResult int
 	flag.StringVar(&departure, "t", "", "specify departure time.")
+	flag.IntVar(&numOfResult, "n", DefaultNumOfResultToShow, "specify amount of result.")
 	flag.Parse()
+
 	hour, minute := departureTime(departure)
 	timetable := createTimetable(getSelector())
-	numOfResult := DefaultNumOfResultToShow
 
 	result := make([]Time, 0, numOfResult)
 	for _, v := range timetable {
