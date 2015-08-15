@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+const (
+	DefaultNumOfResultToShow = 3
+)
+
 func departureTime(departure string) (int, int) {
 	ret, _ := regexp.MatchString("^[0-9]{1,2}:[0-9]{1,2}$", departure)
 	var hour int
@@ -81,21 +85,22 @@ func main() {
 	flag.Parse()
 	hour, minute := departureTime(departure)
 	timetable := createTimetable(getSelector())
+	numOfResult := DefaultNumOfResultToShow
 
 	arrivals := timetable[hour]
-	result := make([]int, 0, 3)
+	result := make([]int, 0, numOfResult)
 	for _, v := range arrivals {
 		if v > minute {
 			result = append(result, v)
-			if len(result) >= 3 {
+			if len(result) >= numOfResult {
 				break
 			}
 		}
 	}
 	printTimes(hour, result)
 
-	if hour != 23 && len(result) < 3 {
-		max := 3 - len(result)
+	if hour != 23 && len(result) < numOfResult {
+		max := numOfResult - len(result)
 		arrivals = timetable[hour+1]
 		result2 := make([]int, 0, max)
 		for _, v := range arrivals {
