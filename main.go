@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"os"
 	"regexp"
 	"strconv"
 	"time"
@@ -89,6 +90,11 @@ func main() {
 	flag.StringVar(&departure, "t", "", "specify departure time.")
 	flag.IntVar(&numOfResult, "n", DefaultNumOfResultToShow, "specify amount of result.")
 	flag.Parse()
+
+	if numOfResult < 0 {
+		fmt.Fprintf(os.Stderr, "parameter for -n must be greater than 0.\n")
+		os.Exit(2)
+	}
 
 	hour, minute := departureTime(departure)
 	timetable := createTimetable(getSelector())
