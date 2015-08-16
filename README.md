@@ -11,3 +11,7 @@ You want to search the starting time of Keisei bus (from Fujitsu to Makuhari-Hon
 # Options
 
 `-t hh:mm` : specify depature time.
+
+`-n n` : display times of n pieces. (default 3)
+
+`-l` : display last bus time.
