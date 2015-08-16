@@ -108,3 +108,19 @@ func TestGetSelector(t *testing.T) {
 		}
 	}
 }
+
+func TestToString(t *testing.T) {
+	value := Time{8, 8}
+	ret := value.toString()
+	if ret != "8:08 " {
+		t.Error("got %v, wrong Format", ret)
+	}
+}
+
+func TestToString2(t *testing.T) {
+	value := Time{10, 10}
+	ret := value.toString()
+	if ret != "10:10 " {
+		t.Error("got %v, wrong Format", ret)
+	}
+}
