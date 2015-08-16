@@ -91,7 +91,7 @@ func main() {
 		isLast bool
 	)
 	flag.StringVar(&departure, "t", "", "specify departure time.")
-	flag.BoolVar(&isLast, "l", false, "bool flag")
+	flag.BoolVar(&isLast, "l", false, "show last bus of the day.")
 	flag.IntVar(&numOfResult, "n", DefaultNumOfResultToShow, "specify amount of result.")
 	flag.Parse()
 
