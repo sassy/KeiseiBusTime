@@ -26,7 +26,11 @@ func (time *Time) toString() string {
 	}
 }
 
-func departureTime(departure string) (int, int) {
+func (t1 *Time) isLaterThan(t2 Time) bool {
+	return t1.hour > t2.hour || (t1.hour == t2.hour && t1.minute > t2.minute)
+}
+
+func departureTime(departure string) Time {
 	ret, _ := regexp.MatchString("^[0-9]{1,2}:[0-9]{1,2}$", departure)
 	var hour int
 	var minute int
@@ -49,7 +53,7 @@ func departureTime(departure string) (int, int) {
 		hour = now.Hour()
 		minute = now.Minute()
 	}
-	return hour, minute
+	return Time{hour, minute}
 }
 
 func getSelector() string {
@@ -104,7 +108,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	hour, minute := departureTime(departure)
+	depTime := departureTime(departure)
 	timetable := createTimetable(getSelector())
 
 	if isLast {
@@ -116,7 +120,7 @@ func main() {
 	result := make([]string, 0, numOfResult)
 	for i := 0; i < len(timetable); i++ {
 		v := timetable[i]
-		if v.minute > minute && v.hour >= hour {
+		if v.isLaterThan(depTime) {
 			timeStr := v.toString()
 			if i < len(timetable)-1 && v == timetable[i+1] {
 				timeStr += "(2)"
