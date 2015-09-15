@@ -6,89 +6,61 @@ import (
 )
 
 func TestDepartureTime(t *testing.T) {
-	hour, minutes := departureTime("10:30")
-	expected_hour := 10
-	expected_minutes := 30
-	if hour != expected_hour {
-		t.Errorf("got %v\nwant %v", hour, expected_hour)
-	}
-	if minutes != expected_minutes {
-		t.Errorf("got %v\nwant %v", minutes, expected_minutes)
+	depTime := departureTime("10:30")
+	expected_time := Time{10, 30}
+	if depTime != expected_time {
+		t.Errorf("got %v\nwant %v", depTime, expected_time)
 	}
 }
 
 func TestDepartureTime2(t *testing.T) {
-	hour, minutes := departureTime("0:0")
-	expected_hour := 0
-	expected_minutes := 0
-	if hour != expected_hour {
-		t.Errorf("got %v\nwant %v", hour, expected_hour)
-	}
-	if minutes != expected_minutes {
-		t.Errorf("got %v\nwant %v", minutes, expected_minutes)
+	depTime := departureTime("0:0")
+	expected_time := Time{0, 0}
+	if depTime != expected_time {
+		t.Errorf("got %v\nwant %v", depTime, expected_time)
 	}
 }
 
 func TestDepartureTime3(t *testing.T) {
-	hour, minutes := departureTime("00:00")
-	expected_hour := 0
-	expected_minutes := 0
-	if hour != expected_hour {
-		t.Errorf("got %v\nwant %v", hour, expected_hour)
-	}
-	if minutes != expected_minutes {
-		t.Errorf("got %v\nwant %v", minutes, expected_minutes)
+	depTime := departureTime("00:00")
+	expected_time := Time{0, 0}
+	if depTime != expected_time {
+		t.Errorf("got %v\nwant %v", depTime, expected_time)
 	}
 }
 
 func TestDepartureTime4(t *testing.T) {
-	hour, minutes := departureTime("23:59")
-	expected_hour := 23
-	expected_minutes := 59
-	if hour != expected_hour {
-		t.Errorf("got %v\nwant %v", hour, expected_hour)
-	}
-	if minutes != expected_minutes {
-		t.Errorf("got %v\nwant %v", minutes, expected_minutes)
+	depTime := departureTime("23:59")
+	expected_time := Time{23, 59}
+	if depTime != expected_time {
+		t.Errorf("got %v\nwant %v", depTime, expected_time)
 	}
 }
 
 func TestDepartureTime5(t *testing.T) {
-	hour, minutes := departureTime("44:30")
+	depTime := departureTime("44:30")
 	now := time.Now()
-	expected_hour := now.Hour()
-	expected_minutes := now.Minute()
-	if hour != expected_hour {
-		t.Errorf("got %v\nwant %v", hour, expected_hour)
-	}
-	if minutes != expected_minutes {
-		t.Errorf("got %v\nwant %v", minutes, expected_minutes)
+	expected_time := Time{now.Hour(), now.Minute()}
+	if depTime != expected_time {
+		t.Errorf("got %v\nwant %v", depTime, expected_time)
 	}
 }
 
 func TestDepartureTime6(t *testing.T) {
-	hour, minutes := departureTime("24:30")
+	depTime := departureTime("24:30")
 	now := time.Now()
-	expected_hour := now.Hour()
-	expected_minutes := now.Minute()
-	if hour != expected_hour {
-		t.Errorf("got %v\nwant %v", hour, expected_hour)
-	}
-	if minutes != expected_minutes {
-		t.Errorf("got %v\nwant %v", minutes, expected_minutes)
+	expected_time := Time{now.Hour(), now.Minute()}
+	if depTime != expected_time {
+		t.Errorf("got %v\nwant %v", depTime, expected_time)
 	}
 }
 
 func TestDepartureTime7(t *testing.T) {
-	hour, minutes := departureTime("12:60")
+	depTime := departureTime("12:60")
 	now := time.Now()
-	expected_hour := now.Hour()
-	expected_minutes := now.Minute()
-	if hour != expected_hour {
-		t.Errorf("got %v\nwant %v", hour, expected_hour)
-	}
-	if minutes != expected_minutes {
-		t.Errorf("got %v\nwant %v", minutes, expected_minutes)
+	expected_time := Time{now.Hour(), now.Minute()}
+	if depTime != expected_time {
+		t.Errorf("got %v\nwant %v", depTime, expected_time)
 	}
 }
 
@@ -122,5 +94,21 @@ func TestToString2(t *testing.T) {
 	ret := value.toString()
 	if ret != "10:10 " {
 		t.Error("got %v, wrong Format", ret)
+	}
+}
+
+func TestIsLaterThan1(t *testing.T) {
+	t1 := Time{11, 00}
+	t2 := Time{10, 30}
+	if !t1.isLaterThan(t2) {
+		t.Error("%v should be later than %v", t1, t2)
+	}
+}
+
+func TestIsLaterThan2(t *testing.T) {
+	t1 := Time{10, 10}
+	t2 := Time{10, 00}
+	if !t1.isLaterThan(t2) {
+		t.Errorf("%v should be later than %v", t1, t2)
 	}
 }
