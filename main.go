@@ -69,7 +69,7 @@ func getSelector() string {
 
 func createTimetable(selector string) []Time {
 	var timetable = make([]Time, 0)
-	doc, _ := goquery.NewDocument("http://www.keiseibus.co.jp/jikoku/bs_tt.php?key=04159_01a")
+	doc, _ := goquery.NewDocument("http://www.keiseibus.co.jp/jikoku/timetable.php?id=4159_1_1")
 	doc.Find(selector).Each(func(_ int, s *goquery.Selection) {
 		s.Find("tbody tr").Each(func(_ int, s *goquery.Selection) {
 			key, _ := strconv.Atoi(s.Find("th").Text())
